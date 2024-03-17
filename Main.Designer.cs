@@ -35,6 +35,7 @@
             btn_create_camp = new Button();
             btn_refresh = new Button();
             btn_report = new Button();
+            checked_list_acc = new CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -43,7 +44,7 @@
             btn_auto.Anchor = AnchorStyles.Top;
             btn_auto.BackColor = Color.Chartreuse;
             btn_auto.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
-            btn_auto.Location = new Point(322, 12);
+            btn_auto.Location = new Point(526, 12);
             btn_auto.Name = "btn_auto";
             btn_auto.Size = new Size(128, 49);
             btn_auto.TabIndex = 0;
@@ -64,11 +65,11 @@
             // 
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(12, 77);
+            dataGridView1.Location = new Point(12, 204);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.RowTemplate.Height = 29;
-            dataGridView1.Size = new Size(776, 361);
+            dataGridView1.Size = new Size(1184, 509);
             dataGridView1.TabIndex = 3;
             // 
             // label1
@@ -83,7 +84,7 @@
             // btn_create_camp
             // 
             btn_create_camp.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btn_create_camp.Location = new Point(509, 16);
+            btn_create_camp.Location = new Point(917, 16);
             btn_create_camp.Name = "btn_create_camp";
             btn_create_camp.Size = new Size(128, 37);
             btn_create_camp.TabIndex = 5;
@@ -104,7 +105,7 @@
             // btn_report
             // 
             btn_report.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btn_report.Location = new Point(663, 16);
+            btn_report.Location = new Point(1071, 16);
             btn_report.Name = "btn_report";
             btn_report.Size = new Size(125, 37);
             btn_report.TabIndex = 7;
@@ -112,11 +113,21 @@
             btn_report.UseVisualStyleBackColor = true;
             btn_report.Click += btn_report_Click;
             // 
+            // checked_list_acc
+            // 
+            checked_list_acc.CheckOnClick = true;
+            checked_list_acc.FormattingEnabled = true;
+            checked_list_acc.Location = new Point(226, 68);
+            checked_list_acc.Name = "checked_list_acc";
+            checked_list_acc.Size = new Size(345, 114);
+            checked_list_acc.TabIndex = 8;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1208, 725);
+            Controls.Add(checked_list_acc);
             Controls.Add(btn_report);
             Controls.Add(btn_refresh);
             Controls.Add(btn_create_camp);
@@ -143,5 +154,6 @@
         private Button btn_create_camp;
         private Button btn_refresh;
         private Button btn_report;
+        private CheckedListBox checked_list_acc;
     }
 }

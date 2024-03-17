@@ -6,14 +6,12 @@ namespace AutoAds
     public partial class TokenForm : Form
     {
 
-        private string acc;
         private Form main;
         private bool _success = false;
 
-        public TokenForm(Form main, string acc)
+        public TokenForm(Form main)
         {
             InitializeComponent();
-            this.acc = acc;
             this.main = main;
             this.FormClosing += TokenForm_FormClosing;
         }
@@ -44,22 +42,7 @@ namespace AutoAds
                 bool success = FBApi.Instance.check_token(new_token, out string _);
                 if (success)
                 {
-                    string str = string.Empty;
-                    using (var reader = new StreamReader(_path))
-                    {
-                        while (reader.Peek() >= 0)
-                        {
-                            var acc_token = reader.ReadLine();
-                            if (!string.IsNullOrEmpty(acc_token) && acc_token.StartsWith(acc))
-                            {
-                                str = File.ReadAllText(_path);
-                                str = str.Replace(acc_token, $"{acc}-{new_token}");
-                                break;
-                            }
-                        }
-                    }
-
-                    File.WriteAllText(_path, str);
+                    File.WriteAllText(_path, new_token);
                     _success = true;
                     this.Close();
                 }
