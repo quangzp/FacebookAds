@@ -236,7 +236,7 @@ namespace AutoAds
                 {
 
                     adset.time_update = DateTime.Now;
-                    adset.acc_name = Constant.ACC_NAME[acc_id];
+                    adset.acc_name = ACCOUNTS[acc_id];
                     results.Add(adset);
                 }
             }
@@ -281,7 +281,7 @@ namespace AutoAds
 
         private void btn_report_Click(object sender, EventArgs e)
         {
-            Form export_form = new ExportExcel();
+            Form export_form = new ExportExcel(_token, ACCOUNTS);
             export_form.ShowDialog();
             export_form.Dispose();
         }

@@ -1,52 +1,26 @@
 ﻿using Model;
 using Models;
-using System.Reflection;
 
 namespace AutoAds
 {
     public partial class ExportExcel : Form
     {
-        public ExportExcel()
+        private string token;
+        private Dictionary<string, string> accounts = new Dictionary<string, string>();
+
+        public ExportExcel(string token, Dictionary<string, string> accounts)
         {
             InitializeComponent();
+            this.token = token;
+            this.accounts = accounts;
         }
 
-        string _path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\tokens.txt";
-
-        Dictionary<string, string> acc_token = new Dictionary<string, string>();
+        //string _path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\tokens.txt";
 
         private void ExportExcel_Load(object sender, EventArgs e)
         {
-            if (!File.Exists(_path))
-            {
-                MessageBox.Show("Không tồn tại file tokens");
-                this.Dispose();
-            }
 
-            for (int i = 0; i < dataGridView1.ColumnCount; i++)
-            {
-                dataGridView1.Columns[i].DataPropertyName = dataGridView1.Columns[i].Name;
-            }
-
-            Dictionary<string, string> acc = new Dictionary<string, string>();
-
-            var lines = File.ReadAllLines(_path);
-
-            foreach (var line in lines)
-            {
-                if (!string.IsNullOrWhiteSpace(line))
-                {
-                    string[] data = line.Split('-');
-                    acc_token.Add(data[0], data[1]);
-                }
-            }
-
-            Dictionary<string, string> acc_name = new Dictionary<string, string>()
-            {
-                {"2079053778967911","Ichic" },
-                {"485423563506298", "CÁM" }
-            };
-            cb_acc_page.DataSource = new BindingSource(acc_name, null);
+            cb_acc_page.DataSource = new BindingSource(accounts, null);
             cb_acc_page.DisplayMember = "Value";
             cb_acc_page.ValueMember = "Key";
         }
@@ -100,38 +74,33 @@ namespace AutoAds
                 return;
             }
 
-            if (acc_token.TryGetValue(acc, out string token))
+
+            var list_camp = (await Task.WhenAll(list_ads_acc.Select(s => FBApi.Instance.get_list_camp(token, s, accounts[s], start, end)))).SelectMany(list => list).ToList();
+
+            //for (int i = 0; i < list_camp.Count - 1; i++)
+            //{
+            //    for (int j = i + 1; j < list_camp.Count; j++)
+            //    {
+            //        int score = LevenshteinDistance.Compute(list_camp[i].name.Substring(0, 4), list_camp[j].name.Substring(0, 4));
+            //        if (score == 0)
+            //        {
+            //            list_camp[i].Merge(list_camp[j]);
+            //            list_camp.RemoveAt(j);
+            //            j--;
+            //        }
+            //    }
+            //}
+
+            list_camp.ForEach(camp => insert_DGV(camp));
+
+            this.Invoke(new MethodInvoker(() =>
             {
-                var list_camp = (await Task.WhenAll(list_ads_acc.Select(s => FBApi.Instance.get_list_camp(token, s, start, end)))).SelectMany(list => list).ToList();
+                long tong_tien = list_camp.Select(s => s.spend).Sum();
+                long data = list_camp.Select(s => s.result).Sum();
+                tb_tien.Text = $"{tong_tien}";
+                tb_data.Text = $"{data}";
+            }));
 
-                //for (int i = 0; i < list_camp.Count - 1; i++)
-                //{
-                //    for (int j = i + 1; j < list_camp.Count; j++)
-                //    {
-                //        int score = LevenshteinDistance.Compute(list_camp[i].name.Substring(0, 4), list_camp[j].name.Substring(0, 4));
-                //        if (score == 0)
-                //        {
-                //            list_camp[i].Merge(list_camp[j]);
-                //            list_camp.RemoveAt(j);
-                //            j--;
-                //        }
-                //    }
-                //}
-
-                list_camp.ForEach(camp => insert_DGV(camp));
-
-                this.Invoke(new MethodInvoker(() =>
-                {
-                    long tong_tien = list_camp.Select(s => s.spend).Sum();
-                    long data = list_camp.Select(s => s.result).Sum();
-                    tb_tien.Text = $"{tong_tien}";
-                    tb_data.Text = $"{data}";
-                }));
-            }
-            else
-            {
-                MessageBox.Show("Không tìm thấy token");
-            }
 
             progressBar1.Visible = false;
         }
